@@ -19,12 +19,13 @@ async function createToken(payload) {
 // verify if jwt token is valid or not
 async function verifyToken(token, expiration=false) {
 	return new Promise((resolve, reject) => {
+		const token = req.header('auth-token')
     	if (!token) {
         	return res.status(400).send('Access Denied')    
     	}
     	try {
     		const verifyToken = Jwt.verify(token, process.env.TOKEN_SECRET)
-    		resolve(verifyToken)
+    		req.user = verifyToken
     	} catch(err){
     		reject(err)
     	}

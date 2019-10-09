@@ -28,9 +28,8 @@ Router.route('/login')
                         "token": user[0]._id
                     }
                 let jwtToken = await Jwt.createToken(payload)
-                res.send(jwtToken)
             	// const token = Jwt.sign({_id:user[0]._id}, process.env.TOKEN_SECRET)
-            	// res.header('auth-token',token).send(token)
+            	res.header('auth-token',jwtToken).send(jwtToken)
             }
             else 
             	return res.status(400).send("Invalid Password")
