@@ -1,7 +1,7 @@
 'use restrict';
 const Router = require("express").Router();
 const Bcrypt = require('bcrypt')
-const Jwt = require('jsonwebtoken');
+const Jwt = require('../app/authentication/jwt');
 const UserCtrl = require('../app/database/controllers/user')
 // const BcryptJs = require('../app/authentication/bcrypt')
 const {loginValidation} = require('../app/authentication/validation')
@@ -24,8 +24,13 @@ Router.route('/login')
 
             // Generate JWT Token
             if (validPass){
-            	const token = Jwt.sign({_id:user[0]._id}, process.env.TOKEN_SECRET)
-            	res.header('auth-token',token).send(token)
+                let payload = {
+                        "token": user[0]._id
+                    }
+                let jwtToken = await Jwt.createToken(payload)
+                res.send(jwtToken)
+            	// const token = Jwt.sign({_id:user[0]._id}, process.env.TOKEN_SECRET)
+            	// res.header('auth-token',token).send(token)
             }
             else 
             	return res.status(400).send("Invalid Password")
