@@ -1,47 +1,35 @@
 'use strict'
+
 const Jwt = require('jsonwebtoken');
-const Config = require('config');
-// const { tokenExpiry } = Config.get('jwt');
+const config = require('config');
+// const { jwtSecret, tokenExpiry } = config.get('jwt');
 
 //creates a jwt token 
 async function createToken(payload) {
     return new Promise((resolve, reject) => {
         try{
-        	const token = Jwt.sign(payload, process.env.TOKEN_SECRET)
-            // expiresIn: tokenExpiry})
+            const token = Jwt.sign(payload, process.env.TOKEN_SECRET)
             resolve(token)
         } catch(err){
-        	reject(err)
+            reject(err)
         }
     })
 }
 
 // verify if jwt token is valid or not
 async function verifyToken(token, expiration=false) {
-	return new Promise((resolve, reject) => {
-		const token = req.header('auth-token')
-    	if (!token) {
-        	return res.status(400).send('Access Denied')    
-    	}
-    	try {
-    		const verifyToken = Jwt.verify(token, process.env.TOKEN_SECRET)
-    		req.user = verifyToken
-    	} catch(err){
-    		reject(err)
-    	}
-       
-        // jwt.verify(token, jwtSecret, {ignoreExpiration: expiration}, (error, decodedToken) => {
-        //     if (error) {               
-        //         reject(error);
-        //     } else {
-        //         resolve(decodedToken);
-        //     }
-        // });
+    return new Promise((resolve, reject) => {
+        try{
+            const verifyToken = Jwt.verify(token, process.env.TOKEN_SECRET)
+            resolve(verifyToken)
+        } catch(err) {
+            reject(err)
+        }
 
     })
 }
 
 module.exports = {
-	createToken,
-	verifyToken
+    createToken,
+    verifyToken
 }

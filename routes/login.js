@@ -5,10 +5,13 @@ const Jwt = require('../app/authentication/jwt');
 const UserCtrl = require('../app/database/controllers/user')
 // const BcryptJs = require('../app/authentication/bcrypt')
 const {loginValidation} = require('../app/authentication/validation')
+const {verifyToken }= require('../app/authentication/jwt')
+
 
 Router.route('/login')
     .post(async (req, res) => {
         try {
+
             // Validation
             const { error } = loginValidation(req.body)
             if (error)
@@ -16,7 +19,7 @@ Router.route('/login')
 
             // checking the email is exist or not
             const user = await UserCtrl.getAllUserData({ 'email': req.body.email })
-           	if (!user)
+           	if (user.length == 0)
                 return res.status(400).send("email doesn't exist in database")
 
             // password matching
